@@ -2,7 +2,7 @@
 echo "Installing mediawiki-extension-archive-leaf fonts for offline use of Palm wiki"
 set -e
 BASEMEDIAWIKI="../.."
-ARCHIVELEAFIR="."
+ARCHIVELEAFDIR="."
 #BASEMEDIAWIKI=/usr/share/mediawiki
 #ARCHIVELEAFDIR=${BASEMEDIAWIKI}/extensions/ArchiveLeaf
 #TODO offline-fonts could just use the env variables
@@ -28,24 +28,30 @@ else
 fi
 while read LOCALSETTING
 do
-    grep -v ${LOCALSETTING} ${BASEMEDIAWIKI}/LocalSettings.php || echo ${LOCALSETTING} >>${BASEMEDIAWIKI}/LocalSettings.php
+    grep "${LOCALSETTING}" ${BASEMEDIAWIKI}/LocalSettings.php >>/dev/null || echo "${LOCALSETTING}" >>${BASEMEDIAWIKI}/LocalSettings.php
 done <<EOT
-$wgAllowExternalImages = true;
-$wgAllowImageTag = true;
-$wgCapitalLinks = false;
-$wgAllowDisplayTitle = true;
-$wgRestrictDisplayTitle = false;
-$wgAllowCopyUploads = true;
-$wgEnableUploads = true;
+\$wgAllowExternalImages = true;
+\$wgAllowImageTag = true;
+\$wgCapitalLinks = false;
+\$wgAllowDisplayTitle = true;
+\$wgRestrictDisplayTitle = false;
+\$wgAllowCopyUploads = true;
+\$wgEnableUploads = true;
 ini_set('max_execution_time', 0);
 # recommended (requires ImageMagick install)
-$wgUseImageMagick = true;
+\$wgUseImageMagick = true;
 # load ArchiveLeaf extension
 wfLoadExtension( 'ArchiveLeaf' );
 # use Metrolook (required for mobile)
 wfLoadSkin( 'Metrolook' );
-$wgMetrolookDownArrow = false;
-$wgMetrolookUploadButton = false;
-$wgDefaultSkin = 'Metrolook';
+\$wgMetrolookDownArrow = false;
+\$wgMetrolookUploadButton = false;
+\$wgDefaultSkin = 'Metrolook';
+\$wgGroupPermissions['user']['archiveleaf'] = true; # Allow users to import pages (by default only "sysops" allowed to improt pages)
+\$wgArchiveLeafBaseURL = 'https://archive.org'; # base URL (default shown)
+\$wgArchiveLeafApiURL = 'https://api.archivelab.org'; # API URL (default shown)
+\$wgArchiveLeafTemplateName = 'Entry'; # primary template (default shown)
+\$wgArchiveLeafTemplateImageName = 'EntryImage'; # per-image template (default shown)
+#\$wgArchiveLeafImportScript = '/home/davidk/script/update_ia_item.py'; # script to run after importing IA item as a new wiki page. item identifier is passed as an argument.
 EOT
 popd >>/dev/null

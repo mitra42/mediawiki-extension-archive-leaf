@@ -12,7 +12,6 @@ FONTSURL=/mediawiki/extensions/ArchiveLeaf/fonts
 FONTSSCSS=${ARCHIVELEAFDIR}/scss/fonts-custom.scss
 set -e # End script on first error
 mkdir -p ${FONTSDIR}
-pushd ${FONTSDIR} >>/dev/null
 touch ${FONTSSCSS} # Make sure it exists
 while read -ra FONTLINE
 do
@@ -21,8 +20,9 @@ do
     FONTVER=${FONTLINE[2]}
     for FONTEXT in .woff .woff2 .ttf
     do
-       [ -f ${FONTNAME}${FONTEXT} ] || curl -L -o${FONTNAME}${FONTEXT} ${FONTURL}${FONTEXT}${FONTVER}
+       [ -f ${FONTSDIR}/${FONTNAME}${FONTEXT} ] || curl -L -o${FONTSDIR}/${FONTNAME}${FONTEXT} ${FONTURL}${FONTEXT}${FONTVER} &
     done
+    wait
     cp ${FONTSSCSS} /tmp/m1
     grep -v ${FONTNAME} /tmp/m1 > ${FONTSSCSS} || echo "adding ${FONTNAME}" # So doesnt end script if fontname not there
     echo "\$${FONTNAME}: \"${FONTSURL}/${FONTNAME}\";" >>${FONTSSCSS}
@@ -38,5 +38,4 @@ noto_sinhala https://archive.org/cors/NotoFonts/NotoSansSinhala-Regular
 noto_tamil https://archive.org/cors/NotoFonts/NotoSansTamil-Regular
 noto_telugu https://archive.org/cors/NotoFonts/NotoSansTelugu-Regular
 EOT
-popd >>/dev/null
 echo Ending font install
