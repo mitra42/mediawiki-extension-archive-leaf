@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 echo "Installing mediawiki-extension-archive-leaf fonts for offline use of Palm wiki"
-# NOTE THIS SHOULD BE RUN FROM THE ARCHIVELEAF EXTENSION DIRECTORY AS "maintenance/offline-fonts.sh"
+# NOTE THIS SHOULD BE RUN FROM THE ARCHIVELEAF EXTENSION DIRECTORY AS "maintenance/offline-fonts"
 
 # TODO INTEGRATE NOTES FROM EVERNOTE IN HERE
 #BASEMEDIAWIKI=/usr/share/mediawiki
