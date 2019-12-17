@@ -26,6 +26,23 @@ then
 else
   tar -xzf Metrolook.tar.gz -C ${BASEMEDIAWIKI}/skins
 fi
+
+APACHECONF=/etc/apache2/conf-available/mediawiki.conf
+APACHECONFLINE='Alias /transcriber/static /var/lib/mediawiki/extensions/ArchiveLeaf/transcriber/build/static'
+fi
+if [ -f ${APACHECONF} ]
+then
+  grep 'transcriber/static' ${APACHECONF} || sudo echo ${APACHECONFLONE} >>${APACHECONF}
+  sudo apachectl graceful
+else
+  cat <<EOT
+I cant find the Apache configuration file in $APACHECONF if you are running nginx, it will need lines like ...
+location /transcriber/static {
+    alias /var/www/palmleaf/extensions/ArchiveLeaf/transcriber/build/static;
+}
+EOT
+fi
+
 while read LOCALSETTING
 do
     grep "${LOCALSETTING}" ${BASEMEDIAWIKI}/LocalSettings.php >>/dev/null || echo "${LOCALSETTING}" >>${BASEMEDIAWIKI}/LocalSettings.php
