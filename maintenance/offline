@@ -29,7 +29,7 @@ fi
 
 APACHECONF=/etc/apache2/conf-available/mediawiki.conf
 APACHECONFLINE='Alias /transcriber/static /var/lib/mediawiki/extensions/ArchiveLeaf/transcriber/build/static'
-fi
+
 if [ -f ${APACHECONF} ]
 then
   grep 'transcriber/static' ${APACHECONF} || sudo echo ${APACHECONFLINE} >>${APACHECONF}
