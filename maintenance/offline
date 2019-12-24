@@ -65,10 +65,11 @@ wfLoadSkin( 'Metrolook' );
 \$wgMetrolookUploadButton = false;
 \$wgDefaultSkin = 'Metrolook';
 \$wgGroupPermissions['user']['archiveleaf'] = true; # Allow users to import pages (by default only "sysops" allowed to improt pages)
-\$wgArchiveLeafBaseURL = 'https://archive.org'; # base URL (default shown)
-\$wgArchiveLeafApiURL = 'https://api.archivelab.org'; # API URL (default shown)
 \$wgArchiveLeafTemplateName = 'Entry'; # primary template (default shown)
 \$wgArchiveLeafTemplateImageName = 'EntryImage'; # per-image template (default shown)
 #\$wgArchiveLeafImportScript = '/home/davidk/script/update_ia_item.py'; # script to run after importing IA item as a new wiki page. item identifier is passed as an argument.
+\$wgArchiveLeafBaseURL = 'https://localhost:4244'; # base URL (default 'https://archive.org' )
+\$wgArchiveLeafApiURL = 'https://localhost:4244'; # API URL (default 'https://api.archivelab.org')
+\$wgArchiveLeafIiifBaseUrl = 'https://localhost:4244/iiif' # IIIF API online would be: https://iiif.archivelab.org/iiif
 EOT
 popd >>/dev/null
