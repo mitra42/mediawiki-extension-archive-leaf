@@ -43,33 +43,38 @@ location /transcriber/static {
 EOT
 fi
 
-while read LOCALSETTING
-do
-    grep "${LOCALSETTING}" ${BASEMEDIAWIKI}/LocalSettings.php >>/dev/null || echo "${LOCALSETTING}" >>${BASEMEDIAWIKI}/LocalSettings.php
-done <<EOT
-\$wgAllowExternalImages = true;
-\$wgAllowImageTag = true;
-\$wgCapitalLinks = false;
-\$wgAllowDisplayTitle = true;
-\$wgRestrictDisplayTitle = false;
-\$wgAllowCopyUploads = true;
-\$wgEnableUploads = true;
-ini_set('max_execution_time', 0);
-# recommended (requires ImageMagick install)
-\$wgUseImageMagick = true;
-# load ArchiveLeaf extension
-wfLoadExtension( 'ArchiveLeaf' );
-# use Metrolook (required for mobile)
-wfLoadSkin( 'Metrolook' );
-\$wgMetrolookDownArrow = false;
-\$wgMetrolookUploadButton = false;
-\$wgDefaultSkin = 'Metrolook';
-\$wgGroupPermissions['user']['archiveleaf'] = true; # Allow users to import pages (by default only "sysops" allowed to improt pages)
-\$wgArchiveLeafTemplateName = 'Entry'; # primary template (default shown)
-\$wgArchiveLeafTemplateImageName = 'EntryImage'; # per-image template (default shown)
-#\$wgArchiveLeafImportScript = '/home/davidk/script/update_ia_item.py'; # script to run after importing IA item as a new wiki page. item identifier is passed as an argument.
-\$wgArchiveLeafBaseURL = 'http://localhost:4244'; # base URL (default 'https://archive.org' )
-\$wgArchiveLeafApiURL = 'http://localhost:4244'; # API URL (default 'https://api.archivelab.org')
-\$wgArchiveLeafIiifBaseUrl = 'http://localhost:4244/iiif' # IIIF API online would be: https://iiif.archivelab.org/iiif
+
+function appendOrReplace {
+  if grep $1 LocalSettings.php
+  then
+    echo "Swapping in place to: $2"
+    sudo sed -i -e "s!^.*$1.*\$!$2!" LocalSettings.php
+  else
+    echo "Appending: $2"
+    echo $2 | sudo tee -a LocalSettings.php
+  fi
+}
+
+appendOrReplace wgAllowExternalImages '$wgAllowExternalImages = true;'
+appendOrReplace wgAllowImageTag '$wgAllowImageTag = true;'
+appendOrReplace wgCapitalLinks '$wgCapitalLinks = false;'
+appendOrReplace wgAllowDisplayTitle '$wgAllowDisplayTitle = true;'
+appendOrReplace wgRestrictDisplayTitle '$wgRestrictDisplayTitle = false;'
+appendOrReplace wgAllowCopyUploads '$wgAllowCopyUploads = true;'
+appendOrReplace wgEnableUploads '$wgEnableUploads = true;'
+appendOrReplace max_execution_time 'ini_set('max_execution_time', 0);'
+appendOrReplace wgUseImageMagick '$wgUseImageMagick = true;'
+appendOrReplace "wfLoadExtension.*ArchiveLeaf" 'wfLoadExtension( 'ArchiveLeaf' );'
+appendOrReplace "wfLoadSkin.*Metrolook" 'wfLoadSkin( 'Metrolook' );'
+appendOrReplace wgMetrolookDownArrow '$wgMetrolookDownArrow = false;'
+appendOrReplace wgMetrolookUploadButton '$wgMetrolookUploadButton = false;'
+appendOrReplace wgDefaultSkin '$wgDefaultSkin = 'Metrolook';'
+appendOrReplace "wgGroupPermissions.*user.*archiveleaf" '$wgGroupPermissions['user']['archiveleaf'] = true; # Allow users to import pages (by default only "sysops" allowed to improt pages)'
+appendOrReplace "wgArchiveLeafTemplateName" '$wgArchiveLeafTemplateName = "Entry"; # primary template (default shown)'
+appendOrReplace wgArchiveLeafTemplateImageName '$wgArchiveLeafTemplateImageName = "EntryImage"; # per-image template (default shown)'
+appendOrReplace wgArchiveLeafImportScript '$wgArchiveLeafImportScript = "/home/davidk/script/update_ia_item.py"; # script to run after importing IA item as a new wiki page. item identifier is passed as an argument.'
+appendOrReplace wgArchiveLeafBaseURL '$wgArchiveLeafBaseURL = $wgServer; # base URL (default "https://archive.org" )'
+appendOrReplace wgArchiveLeafApiURL '$wgArchiveLeafApiURL = $wgServer; # API URL (default "https://api.archivelab.org")'
+appendOrReplace wgArchiveLeafIiifBaseUrl '$wgArchiveLeafIiifBaseUrl = $wgServer . "/iiif" # IIIF API online would be: https://iiif.archivelab.org/iiif'
 EOT
 popd >>/dev/null
