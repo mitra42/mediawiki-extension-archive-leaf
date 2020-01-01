@@ -33,7 +33,7 @@ APACHECONFLINE='Alias /transcriber/static /var/lib/mediawiki/extensions/ArchiveL
 
 if [ -f ${APACHECONF} ]
 then
-  grep 'transcriber/static' ${APACHECONF} || sudo echo ${APACHECONFLINE} >>${APACHECONF}
+  sudo grep 'transcriber/static' ${APACHECONF} || sudo echo ${APACHECONFLINE} >>${APACHECONF}
   sudo apachectl graceful
 else
   cat <<EOT
