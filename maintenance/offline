@@ -93,7 +93,7 @@ appendOrReplace wgArchiveLeafTemplateImageName '$wgArchiveLeafTemplateImageName 
 appendOrReplace wgArchiveLeafImportScript '$wgArchiveLeafImportScript = "/home/davidk/script/update_ia_item.py"; # script to run after importing IA item as a new wiki page. item identifier is passed as an argument.'
 appendOrReplace wgArchiveLeafBaseURL '$wgArchiveLeafBaseURL = $wgServer; # base URL (default "https://archive.org" )'
 appendOrReplace wgArchiveLeafApiURL '$wgArchiveLeafApiURL = $wgServer; # API URL (default "https://api.archivelab.org")'
-appendOrReplace wgArchiveLeafIiifBaseUrl '$wgArchiveLeafIiifBaseUrl = $wgServer . "/iiif" # IIIF API online would be: https://iiif.archivelab.org/iiif'
+appendOrReplace wgArchiveLeafIiifBaseUrl '$wgArchiveLeafIiifBaseUrl = $wgServer . "/iiif"; # IIIF API online would be: https://iiif.archivelab.org/iiif'
 appendOrReplaceEnd
 
 popd >>/dev/null
