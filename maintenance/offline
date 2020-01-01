@@ -33,8 +33,11 @@ APACHECONFLINE='Alias /transcriber/static /var/lib/mediawiki/extensions/ArchiveL
 
 if [ -f ${APACHECONF} ]
 then
-  sudo grep 'transcriber/static' ${APACHECONF} || sudo echo ${APACHECONFLINE} >>${APACHECONF}
-  sudo apachectl graceful
+  if ! grep 'transcriber/static' ${APACHECONF}
+  then
+    echo ${APACHECONFLINE} | sudo tee -a ${APACHECONF}
+    sudo apachectl graceful
+  fi
 else
   cat <<EOT
 I cant find the Apache configuration file in $APACHECONF if you are running nginx, it will need lines like ...
