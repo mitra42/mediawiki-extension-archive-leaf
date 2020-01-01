@@ -6,8 +6,10 @@ ARCHIVELEAFDIR="."
 #MEDIAWIKI=/usr/share/mediawiki
 #MEDIAWIKI=/var/www/html/mediawiki
 #ARCHIVELEAFDIR=${MEDIAWIKI}/extensions/ArchiveLeaf
+LOCALSETTINGS=${MEDIAWIKI}/LocalSettings.php
 #TODO offline-fonts could just use the env variables
 export MEDIAWIKI ARCHIVELEAFDIR
+
 
 # This is following the steps in README.md
 pushd ${ARCHIVELEAFDIR} >>/dev/null
@@ -78,10 +80,10 @@ appendOrReplace wgAllowDisplayTitle '$wgAllowDisplayTitle = true;'
 appendOrReplace wgRestrictDisplayTitle '$wgRestrictDisplayTitle = false;'
 appendOrReplace wgAllowCopyUploads '$wgAllowCopyUploads = true;'
 appendOrReplace wgEnableUploads '$wgEnableUploads = true;'
-appendOrReplace max_execution_time 'ini_set('max_execution_time', 0);'
+appendOrReplace max_execution_time 'ini_set("max_execution_time", 0);'
 appendOrReplace wgUseImageMagick '$wgUseImageMagick = true;'
-appendOrReplace "wfLoadExtension.*ArchiveLeaf" 'wfLoadExtension( 'ArchiveLeaf' );'
-appendOrReplace "wfLoadSkin.*Metrolook" 'wfLoadSkin( 'Metrolook' );'
+appendOrReplace "wfLoadExtension.*ArchiveLeaf" 'wfLoadExtension( "ArchiveLeaf" );'
+appendOrReplace "wfLoadSkin.*Metrolook" 'wfLoadSkin( "Metrolook" );'
 appendOrReplace wgMetrolookDownArrow '$wgMetrolookDownArrow = false;'
 appendOrReplace wgMetrolookUploadButton '$wgMetrolookUploadButton = false;'
 appendOrReplace wgDefaultSkin '$wgDefaultSkin = 'Metrolook';'
