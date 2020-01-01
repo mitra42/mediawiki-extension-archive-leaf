@@ -24,7 +24,7 @@ if [ -d ${BASEMEDIAWIKI}/skins/Metrolook ]
 then
   echo "Metrolook skin appears to be installed"
 else
-  tar -xzf Metrolook.tar.gz -C ${BASEMEDIAWIKI}/skins
+  tar -xzf skins/Metrolook.tar.gz -C ${BASEMEDIAWIKI}/skins
 fi
 
 APACHECONF=/etc/apache2/conf-available/mediawiki.conf
