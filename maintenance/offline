@@ -29,7 +29,6 @@ else
 fi
 
 APACHECONF=/etc/apache2/conf-available/mediawiki.conf
-APACHECONF=/etc/apache2/sites-available/000-default.conf ???
 APACHECONFLINE='Alias /transcriber/static /var/lib/mediawiki/extensions/ArchiveLeaf/transcriber/build/static'
 
 if [ -f ${APACHECONF} ]
