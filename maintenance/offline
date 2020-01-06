@@ -17,6 +17,9 @@ maintenance/transcriber-install # yarn dependencies
 maintenance/offline-fonts # Install offline fonts
 maintenance/transcriber-build # transcriber javascript and css
 maintenance/templates-import # import the required Template:Entry and Template:EntryImage pages into MediaWiki.
+
+sudo apt-get install -y libicu-dev
+
 # The Metrolook skin is included here, because MediaWiki's skin distribution system makes it impossible (maybe intentionally)
 # to script fetching skins.
 # You can get the skin at https://www.mediawiki.org/wiki/Skin:Metrolook
