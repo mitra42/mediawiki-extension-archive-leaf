@@ -76,6 +76,7 @@ function appendOrReplace {
 }
 
 appendOrReplaceBegin
+appendOrReplace wgArchiveLeafMirrorServer '$wgArchiveLeafMirrorServer = $wgServer . ":4244";'
 appendOrReplace wgAllowExternalImages '$wgAllowExternalImages = true;'
 appendOrReplace wgAllowImageTag '$wgAllowImageTag = true;'
 appendOrReplace wgCapitalLinks '$wgCapitalLinks = false;'
@@ -94,10 +95,10 @@ appendOrReplace "wgGroupPermissions.*user.*archiveleaf" '$wgGroupPermissions["us
 appendOrReplace "wgArchiveLeafTemplateName" '$wgArchiveLeafTemplateName = "Entry"; # primary template (default shown)'
 appendOrReplace wgArchiveLeafTemplateImageName '$wgArchiveLeafTemplateImageName = "EntryImage"; # per-image template (default shown)'
 appendOrReplace wgArchiveLeafImportScript '$wgArchiveLeafImportScript = "/home/davidk/script/update_ia_item.py"; # script to run after importing IA item as a new wiki page. item identifier is passed as an argument.'
-appendOrReplace wgArchiveLeafBaseURL '$wgArchiveLeafBaseURL = $wgServer; # base URL (default "https://archive.org" )'
-appendOrReplace wgArchiveLeafApiURL '$wgArchiveLeafApiURL = $wgServer; # API URL (default "https://api.archivelab.org")'
-appendOrReplace wgArchiveLeafIiifBaseUrl '$wgArchiveLeafIiifBaseUrl = $wgServer . "/iiif"; # IIIF API online would be: https://iiif.archivelab.org/iiif'
-appendOrReplace wgArchiveLeafArchiveOrgLinkTarget '$wgArchiveLeafArchiveOrgLinkTarget = '
+appendOrReplace wgArchiveLeafBaseURL '$wgArchiveLeafBaseURL = $wgArchiveLeafMirrorServer; # base URL (default "https://archive.org" )'
+appendOrReplace wgArchiveLeafApiURL '$wgArchiveLeafApiURL = $wgArchiveLeafMirrorServer; # API URL (default "https://api.archivelab.org")'
+appendOrReplace wgArchiveLeafIiifBaseUrl '$wgArchiveLeafIiifBaseUrl = $wgArchiveLeafMirrorServer . "/ifff"; # IIIF API online would be: https://iiif.archivelab.org/iiif'
+appendOrReplace wgArchiveLeafArchiveOrgLinkTarget '$wgArchiveLeafArchiveOrgLinkTarget = $wgArchiveLeafMirrorServer;'
 appendOrReplaceEnd
 
 popd >>/dev/null
