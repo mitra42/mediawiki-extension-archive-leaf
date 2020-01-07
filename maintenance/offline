@@ -6,6 +6,7 @@ ARCHIVELEAFDIR="."
 #MEDIAWIKI=/usr/share/mediawiki
 #MEDIAWIKI=/var/www/html/mediawiki
 #ARCHIVELEAFDIR=${MEDIAWIKI}/extensions/ArchiveLeaf
+WAYBACK_METROLOOK="https://web.archive.org/web/20200107052607/https://extdist.wmflabs.org/dist/skins/Metrolook-REL1_34-48c1b49.tar.gz";
 LOCALSETTINGS=${MEDIAWIKI}/LocalSettings.php
 #TODO offline-fonts could just use the env variables
 export MEDIAWIKI ARCHIVELEAFDIR
@@ -20,8 +21,8 @@ maintenance/templates-import # import the required Template:Entry and Template:E
 
 sudo apt-get install -y libicu-dev
 
-# The Metrolook skin is included here, because MediaWiki's skin distribution system makes it impossible (maybe intentionally)
-# to script fetching skins.
+# The Metrolook skin is fetched from the archive, because MediaWiki's skin distribution system makes it impossible
+# (maybe intentionally) to script fetching skins.
 # You can get the skin at https://www.mediawiki.org/wiki/Skin:Metrolook
 # and I've opened a discussion at https://www.mediawiki.org/wiki/Extension_talk:ExtensionDistributor
 # but searching some past history suggests this is one of those wicked discussions they'll never solve
@@ -30,7 +31,9 @@ if [ -d ${MEDIAWIKI}/skins/Metrolook ]
 then
   echo "Metrolook skin appears to be installed"
 else
-  tar -xzf skins/Metrolook.tar.gz -C ${MEDIAWIKI}/skins
+  pushd ${MEDIAWIKI}/skins
+  curl ${WAYBACK_METROLOOK} | tar -xz
+  popd
 fi
 
 APACHECONF=/etc/apache2/conf-available/mediawiki.conf
