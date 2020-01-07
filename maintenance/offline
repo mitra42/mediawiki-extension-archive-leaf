@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-echo "Installing mediawiki-extension-archive-leaf fonts for offline use of Palm wiki"
+echo "Installing mediawiki-extension-archive-leaf and fonts for offline use of Palm wiki"
 set -e
 MEDIAWIKI="../.."
 ARCHIVELEAFDIR="."
