@@ -101,7 +101,7 @@ appendOrReplace wgArchiveLeafImportScript '$wgArchiveLeafImportScript = "/home/d
 appendOrReplace wgArchiveLeafBaseURL '$wgArchiveLeafBaseURL = $wgArchiveLeafMirrorServer; # base URL (default "https://archive.org" )'
 appendOrReplace wgArchiveLeafApiURL '$wgArchiveLeafApiURL = $wgArchiveLeafMirrorServer; # API URL (default "https://api.archivelab.org")'
 appendOrReplace wgArchiveLeafIiifBaseUrl '$wgArchiveLeafIiifBaseUrl = $wgArchiveLeafMirrorServer . "/ifff"; # IIIF API online would be: https://iiif.archivelab.org/iiif'
-appendOrReplace wgArchiveLeafArchiveOrgLinkTarget '$wgArchiveLeafArchiveOrgLinkTarget = $wgArchiveLeafMirrorServer;'
+appendOrReplace wgArchiveLeafArchiveOrgRewrite '$wgArchiveLeafArchiveOrgRewrite = $wgArchiveLeafMirrorServer;'
 appendOrReplaceEnd
 
 popd >>/dev/null
