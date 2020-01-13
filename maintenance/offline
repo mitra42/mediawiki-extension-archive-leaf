@@ -102,6 +102,12 @@ appendOrReplace wgArchiveLeafBaseURL '$wgArchiveLeafBaseURL = $wgArchiveLeafMirr
 appendOrReplace wgArchiveLeafApiURL '$wgArchiveLeafApiURL = $wgArchiveLeafMirrorServer; # API URL (default "https://api.archivelab.org")'
 appendOrReplace wgArchiveLeafIiifBaseUrl '$wgArchiveLeafIiifBaseUrl = $wgArchiveLeafMirrorServer . "/ifff"; # IIIF API online would be: https://iiif.archivelab.org/iiif'
 appendOrReplace wgArchiveLeafArchiveOrgRewrite '$wgArchiveLeafArchiveOrgRewrite = $wgArchiveLeafMirrorServer;'
+# Set false to use 400px thumbnails whatever screen size
+appendOrReplace wgResponsiveImages '$wgResponsiveImages = false;'
+# Set true to enable making thumbnails when dont exist
+appendOrReplace wgGenerateThumbnailOnParse '$wgGenerateThumbnailOnParse = true;'
+# if set to true, if false then will always send full size image to browser
+appendOrReplace wgUseImageResize '$wgUseImageResize = true;'
 appendOrReplaceEnd
 
 popd >>/dev/null
