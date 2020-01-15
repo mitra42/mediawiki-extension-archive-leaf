@@ -6,6 +6,7 @@ ARCHIVELEAFDIR="."
 #MEDIAWIKI=/usr/share/mediawiki
 #MEDIAWIKI=/var/www/html/mediawiki
 #ARCHIVELEAFDIR=${MEDIAWIKI}/extensions/ArchiveLeaf
+REPO_METROLOOK=https://github.com/wikimedia/mediawiki-skins-Metrolook/archive/REL1_34.zip
 WAYBACK_METROLOOK="https://web.archive.org/web/20200107052607/https://extdist.wmflabs.org/dist/skins/Metrolook-REL1_34-48c1b49.tar.gz";
 LOCALSETTINGS=${MEDIAWIKI}/LocalSettings.php
 #TODO offline-fonts could just use the env variables
@@ -32,8 +33,11 @@ then
   echo "Metrolook skin appears to be installed"
 else
   pushd ${MEDIAWIKI}/skins
-  curl ${WAYBACK_METROLOOK} | tar -xz
-  popd
+  # curl -L ${WAYBACK_METROLOOK} | tar -xz
+  curl -L -o/tmp/metrolook.zip ${REPO_METROLOOK}
+  unzip /tmp/metrolook.zip
+  mv /tmp/mediawiki-skins-Metrolook-REL1_34 ./Metrolook
+  #popd
 fi
 
 APACHECONF=/etc/apache2/conf-available/mediawiki.conf
