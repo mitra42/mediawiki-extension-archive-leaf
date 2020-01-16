@@ -1,0 +1,17 @@
+[Unit]
+Description=ICU Transliterator
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory={{ transcriber_dir }}
+ExecStart=/usr/bin/node ./index.js
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=icutransliterator
+
+[Install]
+WantedBy=multi-user.target
