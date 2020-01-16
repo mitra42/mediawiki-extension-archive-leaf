@@ -67,7 +67,8 @@ else
   curl -L -o/tmp/metrolook.zip ${REPO_METROLOOK}
   unzip /tmp/metrolook.zip
   mv /tmp/mediawiki-skins-Metrolook-REL1_34 ./Metrolook
-  #popd
+  popd
+  maintenance/metrolook-patch # remove unwanted navigation
 fi
 
 APACHECONF=/etc/apache2/conf-available/mediawiki.conf
