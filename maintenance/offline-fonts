@@ -20,7 +20,7 @@ do
     FONTVER=${FONTLINE[2]}
     for FONTEXT in .woff .woff2 .ttf
     do
-       [ -f ${FONTSDIR}/${FONTNAME}${FONTEXT} ] || curl -L -o${FONTSDIR}/${FONTNAME}${FONTEXT} ${FONTURL}${FONTEXT}${FONTVER} &
+       [ -f ${FONTSDIR}/${FONTNAME}${FONTEXT} ] || curl -Ls -o${FONTSDIR}/${FONTNAME}${FONTEXT} ${FONTURL}${FONTEXT}${FONTVER} &
     done
     wait
     cp ${FONTSSCSS} /tmp/m1

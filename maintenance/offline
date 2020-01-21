@@ -19,38 +19,49 @@ OPERATINGSSYSTEM="raspbian"
 
 # This is following the steps in README.md
 pushd ${ARCHIVELEAFDIR} >>/dev/null
-maintenance/transcriber-install # yarn dependencies
-maintenance/offline-fonts # Install offline fonts
-maintenance/transcriber-build # transcriber javascript and css
-maintenance/templates-import # import the required Template:Entry and Template:EntryImage pages into MediaWiki.
+  maintenance/transcriber-install # yarn dependencies
+  maintenance/offline-fonts # Install offline fonts
+  maintenance/transcriber-build # transcriber javascript and css
+  maintenance/templates-import # import the required Template:Entry and Template:EntryImage pages into MediaWiki.
 
-sudo apt-get install -y libicu-dev
-cd /var/lib
-sudo git clone https://github.com/longnow/icu-transliterator-service
-sudo chown -R "${USER}.${GROUP}" icu-transliterator-service
-pushd icu-transliterator-service
-# Note will get error messages about version of node usually
-npm install
-# Samples are balinese
-cp transliterators-sample.json transliterators.json
-# Setup service, not can run it with `PORT=5000 node ./index.js` if want a different port.
-cat transliterator.service \
-| sed -e "s:{{ transcriber_dir }}:/var/lib/icu-transliterator-service:" | sed -e "s:User=root:User=${USER}:" >/tmp/transliterator.service
-if [ "${OPERATINGSYSTEM}" = "armbian" -o "${PLATFORM}" = "rachel" -o "${OPERATINGSYSTEM}" = "raspbian" -o "${OPERATINGSYSTEM}" = "linux" ]
-then
-  diff /tmp/transliterator.service /lib/systemd/system || sudo cp /tmp/transliterator.service /lib/systemd/system
-  sudo systemctl enable transliterator.service # Links /etc/systemd/system/multi-user.targets.wants/transliterator.service to /lib/systemd/system/transliterator
-  sudo systemctl daemon-reload   # Starts transliterator
-  #sudo service transliterator start # Alternative starter
-  #sudo systemctl start transliterator.service # Alternative starter
-  sudo service transliterator start
-  echo "If its working, the next line should respond with wayan"
-  curl http://localhost:3000/Balinese-ban_001 -d ᬯᬬᬦ᭄᭞
-else
-  echo "Installer needs a strategy to setup auto-start on this platform"
-fi
+  sudo apt-get install -y libicu-dev
+  pushd /var/lib
+    if [ -d "icu-transliterator-service" ]
+    then
+      echo "Already have icu-transliterator-service - refreshing"
+      pushd icu-transliterator-service
+        sudo git pull
+      popd
+    else
+      echo "Getting icu-transliterator-service"
+      sudo git clone https://github.com/longnow/icu-transliterator-service
+    fi
+    sudo chown -R "${USER}.${GROUP}" icu-transliterator-service
+    pushd icu-transliterator-service
+      # Note will get error messages about version of node usually
+      npm install
+      # Samples are balinese
+      cp transliterators-sample.json transliterators.json
+    popd # Back to /var/lib
+  popd # Back to $ARCHIVELEAFDIR
+  # Setup service, not can run it with `PORT=5000 node ./index.js` if want a different port.
+  cat transliterator.service \
+  | sed -e "s:{{ transcriber_dir }}:/var/lib/icu-transliterator-service:" | sed -e "s:User=root:User=${USER}:" >/tmp/transliterator.service
+  if [ "${OPERATINGSYSTEM}" = "armbian" -o "${PLATFORM}" = "rachel" -o "${OPERATINGSYSTEM}" = "raspbian" -o "${OPERATINGSYSTEM}" = "linux" ]
+  then
+    diff /tmp/transliterator.service /lib/systemd/system || sudo cp /tmp/transliterator.service /lib/systemd/system
+    sudo systemctl enable transliterator.service # Links /etc/systemd/system/multi-user.targets.wants/transliterator.service to /lib/systemd/system/transliterator
+    sudo systemctl daemon-reload   # Starts transliterator
+    #sudo service transliterator start # Alternative starter
+    #sudo systemctl start transliterator.service # Alternative starter
+    sudo service transliterator start
+    echo "If its working, the next line should respond with wayan"
+    curl http://localhost:3000/Balinese-ban_001 -d ᬯᬬᬦ᭄᭞
+  else
+    echo "Installer needs a strategy to setup auto-start on this platform"
+  fi
 
-popd
+popd # Back to ~
 
 # The Metrolook skin is fetched from the archive, because MediaWiki's skin distribution system makes it impossible
 # (maybe intentionally) to script fetching skins.
@@ -63,11 +74,11 @@ then
   echo "Metrolook skin appears to be installed"
 else
   pushd ${MEDIAWIKI}/skins
-  # curl -L ${WAYBACK_METROLOOK} | tar -xz
-  curl -L -o/tmp/metrolook.zip ${REPO_METROLOOK}
-  unzip /tmp/metrolook.zip
-  mv /tmp/mediawiki-skins-Metrolook-REL1_34 ./Metrolook
-  popd
+    # curl -L ${WAYBACK_METROLOOK} | tar -xz
+    curl -L -o/tmp/metrolook.zip ${REPO_METROLOOK}
+    unzip -q /tmp/metrolook.zip
+    mv mediawiki-skins-Metrolook-REL1_34 ./Metrolook
+  popd # Back to ~
   maintenance/metrolook-patch # remove unwanted navigation
 fi
 
@@ -124,6 +135,7 @@ appendOrReplace wgAllowCopyUploads '$wgAllowCopyUploads = true;'
 appendOrReplace wgEnableUploads '$wgEnableUploads = true;'
 appendOrReplace max_execution_time 'ini_set("max_execution_time", 0);'
 appendOrReplace wgUseImageMagick '$wgUseImageMagick = true;'
+appendOrReplace "wfLoadExtension.*ParserFunctions" 'wfLoadExtension( "ParserFunctions" );' # Reqd by ArchiveLeaf template
 appendOrReplace "wfLoadExtension.*ArchiveLeaf" 'wfLoadExtension( "ArchiveLeaf" );'
 appendOrReplace "wfLoadSkin.*Metrolook" 'wfLoadSkin( "Metrolook" );'
 appendOrReplace wgMetrolookDownArrow '$wgMetrolookDownArrow = false;'
@@ -145,4 +157,4 @@ appendOrReplace wgArchiveLeafTransliterateUrl '$wgArchiveLeafTransliterateUrl = 
 
 appendOrReplaceEnd
 
-popd >>/dev/null
+service transliterator status
