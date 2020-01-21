@@ -4,7 +4,7 @@ set -e
 MEDIAWIKI="../.."
 ARCHIVELEAFDIR="."
 #MEDIAWIKI=/usr/share/mediawiki
-#MEDIAWIKI=/var/www/html/mediawiki
+MEDIAWIKIHTML=/var/www/html/mediawiki
 #ARCHIVELEAFDIR=${MEDIAWIKI}/extensions/ArchiveLeaf
 REPO_METROLOOK=https://github.com/wikimedia/mediawiki-skins-Metrolook/archive/REL1_34.zip
 WAYBACK_METROLOOK="https://web.archive.org/web/20200107052607/https://extdist.wmflabs.org/dist/skins/Metrolook-REL1_34-48c1b49.tar.gz";
@@ -49,12 +49,13 @@ pushd ${ARCHIVELEAFDIR} >>/dev/null
   | sed -e "s:{{ transcriber_dir }}:/var/lib/icu-transliterator-service:" | sed -e "s:User=root:User=${USER}:" >/tmp/transliterator.service
   if [ "${OPERATINGSYSTEM}" = "armbian" -o "${PLATFORM}" = "rachel" -o "${OPERATINGSYSTEM}" = "raspbian" -o "${OPERATINGSYSTEM}" = "linux" ]
   then
-    diff /tmp/transliterator.service /lib/systemd/system || sudo cp /tmp/transliterator.service /lib/systemd/system
+    diff /tmp/transliterator.service /lib/systemd/system >>/dev/null || sudo cp /tmp/transliterator.service /lib/systemd/system
     sudo systemctl enable transliterator.service # Links /etc/systemd/system/multi-user.targets.wants/transliterator.service to /lib/systemd/system/transliterator
     sudo systemctl daemon-reload   # Starts transliterator
     #sudo service transliterator start # Alternative starter
     #sudo systemctl start transliterator.service # Alternative starter
     sudo service transliterator start
+    sleep 5 # Let it start
     echo "If its working, the next line should respond with wayan"
     curl http://localhost:3000/Balinese-ban_001 -d ᬯᬬᬦ᭄᭞
   else
@@ -83,7 +84,7 @@ else
 fi
 
 APACHECONF=/etc/apache2/conf-available/mediawiki.conf
-APACHECONFLINE='Alias /transcriber/static /var/lib/mediawiki/extensions/ArchiveLeaf/transcriber/build/static'
+APACHECONFLINE="Alias /transcriber/static ${MEDIAWIKIHTML}/extensions/ArchiveLeaf/transcriber/build/static"
 
 if [ -f ${APACHECONF} ]
 then
@@ -96,7 +97,7 @@ else
   cat <<EOT
 I cant find the Apache configuration file in $APACHECONF if you are running nginx, it will need lines like ...
 location /transcriber/static {
-    alias /var/www/palmleaf/extensions/ArchiveLeaf/transcriber/build/static;
+    alias ${MEDIAWIKIHTML}/extensions/ArchiveLeaf/transcriber/build/static;
 }
 EOT
 fi
