@@ -14,7 +14,7 @@ export MEDIAWIKI ARCHIVELEAFDIR
 # Group transliterator will be owned by, on most systems groups and users are related
 GROUP=${USER}
 # For service installation - this can also be autodetected - see code in dweb-mirror/install.sh
-OPERATINGSSYSTEM="raspbian"
+OPERATINGSYSTEM="raspbian"
 
 
 # This is following the steps in README.md
@@ -58,7 +58,7 @@ pushd ${ARCHIVELEAFDIR} >>/dev/null
     echo "If its working, the next line should respond with wayan"
     curl http://localhost:3000/Balinese-ban_001 -d ᬯᬬᬦ᭄᭞
   else
-    echo "Installer needs a strategy to setup auto-start on this platform"
+    echo "===== ERROR Installer needs a strategy to setup auto-start on this platform"
   fi
 
 popd # Back to ~
